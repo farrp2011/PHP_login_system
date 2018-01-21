@@ -5,14 +5,8 @@
 	$user = new users();
 	if(isset($_COOKIE[COL_COOKIE]))
 	{
-		if($user->checkLoggedIn($_COOKIE[COL_COOKIE]) == FALSE)
-		{
-			//echo "Over the wall";
-			header("Location: index.php");
-			exit();
-		}
+		$user->checkLoggedIn($_COOKIE[COL_COOKIE]);
 	}
-
 ?>
 <html>
 <head>
@@ -21,12 +15,12 @@
 </head>
 
 <body>
-	<h1>Your Profile Page</h1>
+	<h1>Game</h1>
 	<nav>
 		<ul>
 			<li> <a href="index.php">Home</a> </li>
-			<li> <a href="game.php">Game</a></li>
-			<li> <a href="score.php">Score Board</a></li>
+			<li> <a href="game.php">Game</a> </li>
+			<li> <a href="score.php">Score Board</a> </li>
 			<?php
 				if($user->isLogged())
 				{
@@ -44,8 +38,8 @@
 		</ul>
 	</nav>
 	<main>
-		<p>Your Email is: <?php echo $user->getEmail(); ?></p>
-		<p>Your User ID is: <?php echo $user->getId();?></p>
+		<div id="snake_game"></div>
+		<script src="snake_game.js"></script>
 	</main>
 </body>
 

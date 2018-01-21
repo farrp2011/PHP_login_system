@@ -94,6 +94,7 @@ class users
 		//if we made it this farr there is a row with that a cookie we want
 		//normaly I would clean the input but it is coming our of the database
 		$this->id = $row[COL_ID];
+		//var_dump($this->id);
 		$this->email = $row[COL_EMAIL];
 		$this->isLogged = TRUE;
 		return(TRUE);
@@ -136,6 +137,7 @@ class users
 		//if we got this farr then the password works!!!
 		//we now have to set the cookie and I do love cookies
 		$this->id = $row[COL_ID];
+		//var_dump($this->id);
 		$this->cookie = cleanInput($this->createSalt());//always want to stay clean
 		//this is the only time the cookie will be set so I'm not going to
 		//make a separat method.

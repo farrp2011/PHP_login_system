@@ -8,13 +8,23 @@
 ?>
 <html>
 <head>
-	<title>Home</title>
+	<title>Logout</title>
+	<link rel="stylesheet" href="styleSheets.css">
 </head>
 
 <body>
 	<h1>Logged Out</h1>
+	<nav>
+		<ul>
+			<li> <a href="index.php">Home</a> </li>
+			<li> <a href="game.php">Game</a> </li>
+			<li> <a href="score.php">Score Board</a> </li>
+			<li> <a href="login.php">Login</a> </li>
+			<li> <a href="registration.php">Registration</a> </li>
+		</ul>
+	</nav>
 	<main>
-		<a href="index.php">Home</a>
+		<p>you are logged out</p>
 	</main>
 </body>
 
