@@ -25,7 +25,7 @@
 		$db->query("INSERT INTO game_tb ( user_id , score ) VALUES ( ".$user->getId().", ".$newScore." );");
 	}
 
-	$result = $db->query("SELECT ".USERS_TABLE.".".COL_EMAIL.", game_tb.score FROM game_tb LEFT JOIN ".USERS_TABLE." ON game_tb.user_id = ".USERS_TABLE.".".COL_ID." ORDER BY score DESC ;");
+	$result = $db->query("SELECT ".USERS_TABLE.".".COL_NAME.", game_tb.score FROM game_tb LEFT JOIN ".USERS_TABLE." ON game_tb.user_id = ".USERS_TABLE.".".COL_ID." ORDER BY score DESC ;");
 
 ?>
 <html>
@@ -62,7 +62,7 @@
 			while($row = $result->fetchArray())
 			{
 				echo "";
-				echo '<li>'.$row[COL_EMAIL].' got '.$row["score"].'</li>';
+				echo '<li>'.$row[COL_NAME].' got a score of '.$row["score"].'</li>';
 			}
 		?>
 	</main>

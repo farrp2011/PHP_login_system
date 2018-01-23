@@ -38,7 +38,9 @@
 		</ul>
 	</nav>
 	<main>
-		<p>Welcome this is a simple and ugly website to demostrate a login using PHP and SQLite</p>
+		<p>Welcome to this is a simple and ugly website to demostrate a login system using PHP and SQLite3.</p>
+		<p>The sources code is avaiable at <a href="https://github.com/farrp2011/PHP_login_system">GitHub</a>.</p>
+		<p>This site was created by Paul Farr (farrp2011@live.com)</p>
 	</main>
 </body>
 

@@ -45,7 +45,8 @@
 	</nav>
 	<main>
 		<p>Your Email is: <?php echo $user->getEmail(); ?></p>
-		<p>Your User ID is: <?php echo $user->getId();?></p>
+		<p>Your User ID is: <?php echo $user->getId(); ?></p>
+		<p>Your Name is: <?php echo $user->getName(); ?></p>
 	</main>
 </body>
 

@@ -15,10 +15,11 @@ define("COL_EMAIL", "email");
 define("COL_COOKIE", "cookie");
 define("COL_PASSWORD", "password");//this is the hash
 define("COL_SALT","salt");
+define("COL_NAME", "user_name");
 define("SALT_LEN",16);//making this much longer will have little effect on secrity
 
 //You should change this when you set up the system for the frist time.
-define("PEPPER","aUy6520JJdhWhat");//used with the salt for one last bit of secrity
+define("PEPPER","Change Me");//used with the salt for one last bit of secrity
 
 define("ERR_BAD_EMAIL", 5);
 define("ERR_BAD_PASSWORD", 6);
@@ -28,6 +29,7 @@ class users
 	private $id;
 	private $email;
 	private $passwordHash;
+	private $name;
 	private $salt;//for the password
 	private $cookie;//side note, I love cookies
 	private $isLogged = FALSE;
@@ -47,6 +49,15 @@ class users
 		return(FALSE);
 	}
 
+	public function getName()
+	{
+		if($this->isLogged)
+		{
+			return($this->name);
+		}
+		return(FALSE);
+	}
+
 	public function getEmail()
 	{
 		if($this->isLogged())
@@ -62,6 +73,7 @@ class users
 		$db->query("CREATE TABLE IF NOT EXISTS "
 			.USERS_TABLE." (".COL_ID." INTEGER PRIMARY KEY, "
 			.COL_EMAIL." TEXT,"
+			.COL_NAME." TEXT,"
 			.COL_COOKIE." TEXT,"
 			.COL_PASSWORD." TEXT,"
 			.COL_SALT." TEXT);");
@@ -84,7 +96,7 @@ class users
 		//I see all parameters as drity and need to be cleaned
 		$this->cookie = cleanInput($_cookie);
 		$db = new SQLite3(DB_FILE);
-		$result = $db->query("SELECT ".COL_ID.", ".COL_EMAIL." FROM ".USERS_TABLE." WHERE ".COL_COOKIE." = '".$this->cookie."';");
+		$result = $db->query("SELECT ".COL_ID.", ".COL_NAME.", ".COL_EMAIL." FROM ".USERS_TABLE." WHERE ".COL_COOKIE." = '".$this->cookie."';");
 		$row = $result->fetchArray();
 		//if the $row var is false the user is logged out and we need to send a false back
 		if($row == FALSE)
@@ -96,6 +108,7 @@ class users
 		$this->id = $row[COL_ID];
 		//var_dump($this->id);
 		$this->email = $row[COL_EMAIL];
+		$this->name = $row[COL_NAME];
 		$this->isLogged = TRUE;
 		return(TRUE);
 	}
@@ -152,12 +165,13 @@ class users
 		return(TRUE);
 	}
 
-	public function creatNewUser($_email, $_password)
+	public function creatNewUser($_email, $_password, $_name)
 	{
 		//everything that is saved in the obj needs to get cleaned
 		//I'm getting a random input that could mess up the SQL query
 		$this->salt = cleanInput($this->createSalt());
 		$this->email = cleanInput($_email);
+		$this->name = cleanInput($_name);
 		$this->password = cleanInput(hash("sha512",PEPPER.$_password.$this->salt));//We want the hash
 		//Don't need to worry about a cookie becaues the user is not logged in
 		//They will get there cookie when they loggin.
@@ -167,12 +181,12 @@ class users
 
 		//we need to check if the the email is taken
 		$db = new SQLite3(DB_FILE);
-		$result = $db->query("SELECT ".COL_EMAIL." FROM ".USERS_TABLE." WHERE ".COL_EMAIL." = '".$this->email."' ;");
+		$result = $db->query("SELECT ".COL_EMAIL.", ".COL_NAME." FROM ".USERS_TABLE." WHERE ".COL_EMAIL." = '".$this->email."' OR ".COL_NAME." = '".$this->name."' ;");
 		$row = $result->fetchArray();
-		var_dump($row);
+		//var_dump($row);
 
 		//we want the email to not have pass the
-		//validor and we want the email to not be taken
+		//validor and we want the email to not be taken also the name
 		if(filter_var($this->email, FILTER_VALIDATE_EMAIL)  == FALSE  || $row != FALSE)
 		{
 			//if this happens the email is bad.
@@ -187,9 +201,11 @@ class users
 
 		$db->query("INSERT INTO ".USERS_TABLE." (".
 			COL_EMAIL.", ".
+			COL_NAME.", ".
 			COL_PASSWORD.", ".
 			COL_SALT.") VALUES('".
 			$this->email."', '".
+			$this->name."', '".
 			$this->password."', '".
 			$this->salt."');");
 		return(TRUE);

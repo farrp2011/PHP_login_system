@@ -4,7 +4,7 @@
 
 
 	//check email and password is cool
-	if(isset($_POST[COL_EMAIL]) == FALSE || isset($_POST[COL_PASSWORD]) == FALSE)
+	if(isset($_POST[COL_EMAIL]) == FALSE || isset($_POST[COL_PASSWORD]) == FALSE || isset($_POST[COL_NAME]) == FALSE)
 	{
 		header("Location: registration.php");
 		exit();
@@ -17,7 +17,7 @@
 	$newUser = new users();
 	$isPasswordGood = TRUE;
 
-	if($newUser->creatNewUser($_POST[COL_EMAIL], $_POST[COL_PASSWORD]) == FALSE)//the createNewUser is self cleaning
+	if($newUser->creatNewUser($_POST[COL_EMAIL], $_POST[COL_PASSWORD], $_POST[COL_NAME]) == FALSE)//the createNewUser is self cleaning
 	{
 		$isPasswordGood = FALSE;
 	}
@@ -30,10 +30,20 @@
 ?>
 <html>
 <head>
-	<tile>Welcome!!!</tite>
+	<title>Oops...</title>
+	<link rel="stylesheet" href="styleSheets.css">
 </head>
 
 <body>
+	<h1>Oops...</h1>
+	<nav>
+		<ul>
+			<li> <a href="index.php">Home</a> </li>
+			<li> <a href="game.php">Game</a> </li>
+			<li> <a href="score.php">Score Board</a> </li>
+			<li> <a href="registration.php">Registraion</a> </li>
+		</ul>
+	</nav>
 	<main>
 		<?php
 			if($isPasswordGood == TRUE)
@@ -42,7 +52,7 @@
 			}
 			else
 			{
-				echo "Email Taken";
+				echo "Email Taken or Name Taken";
 			}
 		?>
 	</main>
