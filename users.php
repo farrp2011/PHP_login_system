@@ -19,7 +19,7 @@ define("COL_NAME", "user_name");
 define("SALT_LEN",16);//making this much longer will have little effect on secrity
 
 //You should change this when you set up the system for the frist time.
-define("PEPPER","Change Me");//used with the salt for one last bit of secrity
+define("PEPPER","kiqPn48SmCiU20");//used with the salt for one last bit of secrity
 
 define("ERR_BAD_EMAIL", 5);
 define("ERR_BAD_PASSWORD", 6);

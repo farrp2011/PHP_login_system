@@ -58,13 +58,14 @@
 		</ul>
 	</nav>
 	<main>
+		<ol>
 		<?php
 			while($row = $result->fetchArray())
 			{
-				echo "";
 				echo '<li>'.$row[COL_NAME].' got a score of '.$row["score"].'</li>';
 			}
 		?>
+		</ol>
 	</main>
 </body>
 
