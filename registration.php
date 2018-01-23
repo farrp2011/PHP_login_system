@@ -31,11 +31,13 @@
 		</ul>
 	</nav>
 	<main>
+		<p style="color:red"> Warning!!! No HTTPS!!! Passwords are sent over the wire in clear text! Use a unique password that is different from any other password you use. </p>
 		<form action="./welcome.php" method="post">
 			Email: <input type="text" name=<?php echo'"'.COL_EMAIL.'"' ?>>
 			Password: <input type="password" name=<?php echo'"'.COL_PASSWORD.'"' ?>>
 			<input type="submit" value="Register">
 		</form>
+
 	</main>
 </body>
 

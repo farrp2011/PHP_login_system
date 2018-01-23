@@ -18,7 +18,7 @@ define("COL_SALT","salt");
 define("SALT_LEN",16);//making this much longer will have little effect on secrity
 
 //You should change this when you set up the system for the frist time.
-define("PEPPER","a769iyiHSCGS9");//used with the salt for one last bit of secrity
+define("PEPPER","aUy6520JJdhWhat");//used with the salt for one last bit of secrity
 
 define("ERR_BAD_EMAIL", 5);
 define("ERR_BAD_PASSWORD", 6);

@@ -81,7 +81,7 @@ function setUp()
     var hookEle = document.getElementById(HTML_HOOK);
     hookEle.innerHTML = `
             <canvas id="`+CANVAS_ID+`" width="`+WIDTH+`" height="`
-           +HEIGHT+`"> </canvas><br/>`;
+           +HEIGHT+`"> </canvas><br/><form action="score.php" method="post"><input type="hidden" name="score" value="0"><input id="s_button" disabled type="submit" value="Submit Score"></form>`;
     gameObj = createGameObj();
     
     gameObj.timeObj = setInterval(mainLoop, GAME_SPEED);
@@ -314,9 +314,7 @@ function mainLoop()
     
     if(lost === true)
     {
-	var hookEle = document.getElementById(HTML_HOOK);
-	hookEle.innerHTML += '<form action="score.php" method="post"><input type="hidden" name="score" value="'+gameObj.score+'"><input type="submit" value="Submit Score"></form>';
-	display();
+	document.getElementById("s_button").disabled = false;
 
         clearInterval(gameObj.timeObj);//stop the loop
         gameObj.timeObj = null;
