@@ -77,6 +77,7 @@ class users
 			.COL_COOKIE." TEXT,"
 			.COL_PASSWORD." TEXT,"
 			.COL_SALT." TEXT);");
+		$db->close();
 	}
 
 	private function createSalt()
@@ -93,11 +94,19 @@ class users
 
 	public function checkLoggedIn($_cookie)
 	{
+		$this->creatDB();
 		//I see all parameters as drity and need to be cleaned
 		$this->cookie = cleanInput($_cookie);
 		$db = new SQLite3(DB_FILE);
-		$result = $db->query("SELECT ".COL_ID.", ".COL_NAME.", ".COL_EMAIL." FROM ".USERS_TABLE." WHERE ".COL_COOKIE." = '".$this->cookie."';");
+		//$smt = $db->prepare("SELECT ".COL_ID.", ".COL_NAME.", ".COL_EMAIL." FROM ".USERS_TABLE." WHERE ".COL_COOKIE." = ':cookie';");
+		//$smt->bindValue(":cookie", $this->cookie, SQLITE3_TEXT);
+		//$result = $smt->execute();
+		//var_dump($result);
+		$smt = $db->prepare("SELECT ".COL_ID.", ".COL_NAME.", ".COL_EMAIL." FROM ".USERS_TABLE." WHERE ".COL_COOKIE." = :cookie ;");
+		$smt->bindValue(":cookie", $this->cookie, SQLITE3_TEXT);
+		$result = $smt->execute();
 		$row = $result->fetchArray();
+		//var_dump($row);
 		//if the $row var is false the user is logged out and we need to send a false back
 		if($row == FALSE)
 		{
@@ -106,7 +115,7 @@ class users
 		//if we made it this farr there is a row with that a cookie we want
 		//normaly I would clean the input but it is coming our of the database
 		$this->id = $row[COL_ID];
-		//var_dump($this->id);
+		//var_dump($row);
 		$this->email = $row[COL_EMAIL];
 		$this->name = $row[COL_NAME];
 		$this->isLogged = TRUE;
@@ -122,12 +131,15 @@ class users
 
 		//we need check the email and get the salt
 		$db = new SQLite3(DB_FILE);
-		$result = $db->query("SELECT ".COL_ID.", ".COL_SALT.", ".COL_PASSWORD." FROM ".USERS_TABLE." WHERE ".COL_EMAIL." = '".$this->email."' ;");
+		$smt = $db->prepare("SELECT ".COL_ID.", ".COL_SALT.", ".COL_PASSWORD." FROM ".USERS_TABLE." WHERE ".COL_EMAIL." = :email ;");
+		$smt->bindParam(":email", $this->email, SQLITE3_TEXT);
+		$result = $smt->execute();
 		//if results come back false the email was bad.
-
+		var_dump($result);
 		$row = $result->fetchArray();
 		if($row == FALSE)
 		{
+			//echo "THE Email is";
 			//we did not find an email
 			return(ERR_BAD_EMAIL);
 		}
@@ -157,11 +169,14 @@ class users
 
 		setcookie(COL_COOKIE, $this->cookie, time() + 3600 * 12);//the cookie will exire in 12 hours
 		//now is the time to add the cookie to the database
-
-		$db->query("UPDATE ".USERS_TABLE." SET ".COL_COOKIE." = '".$this->cookie."' WHERE ".COL_ID." = ".$this->id." ;");
-
-
+		$smt->close();
+		$db = new SQLite3(DB_FILE);
+		$smt = $db->prepare("UPDATE ".USERS_TABLE." SET ".COL_COOKIE." = :cookie WHERE ".COL_ID." = :id ;");
+		$smt->bindParam(":id", $this->id, SQLITE3_TEXT);
+		$smt->bindParam(":cookie", $this->cookie, SQLITE3_TEXT);
+		$smt->execute();
 		//we are cool!!
+		//echo "\n Good login maybe????? \n";
 		return(TRUE);
 	}
 
@@ -181,7 +196,10 @@ class users
 
 		//we need to check if the the email is taken
 		$db = new SQLite3(DB_FILE);
-		$result = $db->query("SELECT ".COL_EMAIL.", ".COL_NAME." FROM ".USERS_TABLE." WHERE ".COL_EMAIL." = '".$this->email."' OR ".COL_NAME." = '".$this->name."' ;");
+		$smt = $db->prepare("SELECT ".COL_EMAIL.", ".COL_NAME." FROM ".USERS_TABLE." WHERE ".COL_EMAIL." = :email OR ".COL_NAME." = :name ;");
+		$smt->bindParam(":email", $this->email, SQLITE3_TEXT);
+		$smt->bindParam(":name", $this->name, SQLITE3_TEXT);
+		$result = $smt->execute();
 		$row = $result->fetchArray();
 		//var_dump($row);
 
@@ -199,6 +217,8 @@ class users
 
 		//Now we know we have a DB and good user data.
 
+		/*
+		//this is the old stuff that will get the site hacked do not use!!!!
 		$db->query("INSERT INTO ".USERS_TABLE." (".
 			COL_EMAIL.", ".
 			COL_NAME.", ".
@@ -208,6 +228,15 @@ class users
 			$this->name."', '".
 			$this->password."', '".
 			$this->salt."');");
+		*/
+		$db = new SQLite3(DB_FILE);
+		$smt = $db->prepare("INSERT INTO ".USERS_TABLE." (".COL_EMAIL.", ".COL_NAME.", ".COL_PASSWORD.", ".COL_SALT." ) VALUES(:email, :name, :password, :salt );");
+		$smt->bindParam(":email", $this->email, SQLITE3_TEXT);
+		$smt->bindParam(":name", $this->name, SQLITE3_TEXT);
+		$smt->bindParam(":password", $this->password, SQLITE3_TEXT);
+		$smt->bindParam(":salt", $this->salt, SQLITE3_TEXT);
+		$result = $smt->execute();
+		var_dump($result);
 		return(TRUE);
 	}
 }

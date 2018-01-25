@@ -3,11 +3,14 @@
 <?php
 	require_once("./users.php");
 
+	$user = new users();
 	if(isset($_COOKIE[COL_COOKIE]))
 	{
-		if($user->checkLoggedIn($_COOKIE[COL_COOKIE]) == TRUE)
+		//echo "there is a cookie\n";
+		if($user->checkLoggedIn($_COOKIE[COL_COOKIE]) == TRUE);
 		{
-			header("Locatoin: index.php");
+			//echo"\n We are logged in\n";
+			header("Location: index.php");
 			exit();
 		}
 	}

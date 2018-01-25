@@ -28,7 +28,7 @@
 	//everthing is good time to move on!!!
 
 	header("Location: profile.php");
-
+	exit();
 
 ?>
 
