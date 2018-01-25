@@ -48,7 +48,7 @@
 		<?php
 			if($isPasswordGood == TRUE)
 			{
-				echo "You are in";
+				//echo "You are in";
 			}
 			else
 			{

@@ -10,7 +10,7 @@
 ?>
 <html>
 <head>
-	<title>Home</title>
+	<title>Game</title>
 	<link rel="stylesheet" href="styleSheets.css">
 </head>
 

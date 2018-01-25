@@ -12,7 +12,7 @@
 
 	$db = new SQLite3(DB_FILE);
 	$db->query("CREATE TABLE IF NOT EXISTS game_tb (id INTEGER PRIMARY KEY, user_id INTEGER, score INTEGER );");
-
+	//$db->close();
 	//var_dump($_POST["score"]);
 	//var_dump($user->getId());
 	//var_dump($newScore);
@@ -22,15 +22,19 @@
 	if(isset($_POST["score"]) && is_numeric($_POST["score"]) && $user->isLogged())
 	{
 		$newScore = $_POST["score"];
-		$db->query("INSERT INTO game_tb ( user_id , score ) VALUES ( ".$user->getId().", ".$newScore." );");
+		$smt = $db->prepare("INSERT INTO game_tb ( user_id , score ) VALUES ( :id , :score );");
+		$smt->bindValue(":id", $user->getId(), SQLITE3_INTEGER);
+		$smt->bindValue(":score", $_POST["score"], SQLITE3_INTEGER);
+		$result = $smt->execute();
+		//$db->close();
 	}
-
+	//$db-> new SQLite3(DB_FILE);
 	$result = $db->query("SELECT ".USERS_TABLE.".".COL_NAME.", game_tb.score FROM game_tb LEFT JOIN ".USERS_TABLE." ON game_tb.user_id = ".USERS_TABLE.".".COL_ID." ORDER BY score DESC ;");
 
 ?>
 <html>
 <head>
-	<title>Home</title>
+	<title>Score Board</title>
 	<link rel="stylesheet" href="styleSheets.css">
 </head>
 
@@ -64,6 +68,7 @@
 			{
 				echo '<li>'.$row[COL_NAME].' got a score of '.$row["score"].'</li>';
 			}
+			$db->close();
 		?>
 		</ol>
 	</main>
