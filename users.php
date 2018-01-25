@@ -135,7 +135,7 @@ class users
 		$smt->bindParam(":email", $this->email, SQLITE3_TEXT);
 		$result = $smt->execute();
 		//if results come back false the email was bad.
-		var_dump($result);
+		//var_dump($result);
 		$row = $result->fetchArray();
 		if($row == FALSE)
 		{
@@ -175,6 +175,7 @@ class users
 		$smt->bindParam(":id", $this->id, SQLITE3_TEXT);
 		$smt->bindParam(":cookie", $this->cookie, SQLITE3_TEXT);
 		$smt->execute();
+		$smt->close();
 		//we are cool!!
 		//echo "\n Good login maybe????? \n";
 		return(TRUE);
@@ -211,7 +212,7 @@ class users
 			//I do not care what the password looks like on this side
 			return(FALSE);
 		}
-
+		$smt->close();
 		//if we are here we are be good
 
 
@@ -236,7 +237,7 @@ class users
 		$smt->bindParam(":password", $this->password, SQLITE3_TEXT);
 		$smt->bindParam(":salt", $this->salt, SQLITE3_TEXT);
 		$result = $smt->execute();
-		var_dump($result);
+		$smt->close();
 		return(TRUE);
 	}
 }
